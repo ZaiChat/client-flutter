@@ -11,9 +11,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - uses: subosito/flutter-action@v1
         with:
           flutter-version: '2.2.1'
+
       - run: flutter pub get
       - run: flutter test
-      - run: flutter build web
+      - run: flutter build web --web-renderer html
+
+      - name: Publish gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/master'
+        with:
+          deploy_key: ${{ secrets.DEPLOY_KEY }}
+          external_repository: ZaiChat/ZaiChat.github.io
+          publish_branch: master
+          publish_dir: ./build/web
