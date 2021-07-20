@@ -83,7 +83,16 @@ class _MessageInputState extends State<MessageInput> {
   Widget build(BuildContext context) {
     return
       Container(
-        color: Colors.black12,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 5,
+              offset: Offset(0.0, 4)
+            )
+          ]
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
@@ -99,7 +108,7 @@ class _MessageInputState extends State<MessageInput> {
                 ),
               ),
               if (_controller.text.isNotEmpty)
-                TextButton(
+                ElevatedButton(
                     onPressed: _sendMessage,
                     child: Text("Send")
                 )
