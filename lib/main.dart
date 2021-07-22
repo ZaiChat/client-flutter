@@ -87,9 +87,9 @@ class _MessageInputState extends State<MessageInput> {
           color: Colors.white,
           boxShadow: <BoxShadow>[
             BoxShadow(
-              color: Colors.black26,
+              color: Colors.black54,
               blurRadius: 5,
-              offset: Offset(0.0, 4)
+              offset: Offset(0.0, 2)
             )
           ]
         ),
