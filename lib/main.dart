@@ -83,6 +83,8 @@ class _MessageInputState extends State<MessageInput> {
 
   final _controller = TextEditingController(text: "");
 
+  final _focusNode = FocusNode();
+
   var _showSendButton = false;
 
   @override
@@ -98,6 +100,7 @@ class _MessageInputState extends State<MessageInput> {
   @override
   void dispose() {
     _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -112,6 +115,7 @@ class _MessageInputState extends State<MessageInput> {
       .of<MessageHistoryModel>(context, listen: false)
       .addMessage(message);
     _controller.text = "";
+    _focusNode.requestFocus();
   }
 
   @override
@@ -134,6 +138,8 @@ class _MessageInputState extends State<MessageInput> {
             children: [
               Expanded(
                 child: TextField(
+                  autofocus: true,
+                  focusNode: _focusNode,
                   controller: _controller,
                   onSubmitted: (_) { _sendMessage(); },
                   decoration: const InputDecoration(
