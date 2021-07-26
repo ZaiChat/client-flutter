@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:zaichat/model/MessageHIstory.dart';
+import 'package:zaichat/model/ApplicationState.dart';
+import 'package:zaichat/model/MessageHistoryModel.dart';
 import 'package:zaichat/util.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ApplicationState(),
+      builder: (context, _) => MyApp()
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -33,18 +39,25 @@ class ZaiChatHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text("ZaiChat"),
       ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: MessageHistory()
-            ),
-            MessageInput()
-          ],
-        ),
-      ),
+      body: Messaging(),
     );
   }
+}
+
+class Messaging extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) =>
+    Center(
+      child: Column(
+        children: <Widget>[
+          Expanded(
+              child: MessageHistory()
+          ),
+          MessageInput()
+        ],
+      ),
+    );
 }
 
 class MessageHistory extends StatelessWidget {
