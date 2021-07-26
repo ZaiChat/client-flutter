@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zaichat/model/ApplicationState.dart';
 import 'package:zaichat/model/MessageHistoryModel.dart';
+import 'package:zaichat/screens/AuthScreen.dart';
 import 'package:zaichat/util.dart';
 
 void main() {
@@ -39,7 +41,15 @@ class ZaiChatHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text("ZaiChat"),
       ),
-      body: Messaging(),
+      body:
+        Consumer<ApplicationState>(
+          builder: (context, appState, _) {
+            if (appState.loginState == ApplicationLoginState.loggedIn)
+              return Messaging();
+            else
+              return AuthScreen(appState);
+          }
+        )
     );
   }
 }
