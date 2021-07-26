@@ -7,12 +7,7 @@ import 'package:zaichat/screens/AuthScreen.dart';
 import 'package:zaichat/util.dart';
 
 void main() {
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => ApplicationState(),
-      builder: (context, _) => MyApp()
-    )
-  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -20,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
     ChangeNotifierProvider(
-      create: (_) => MessageHistoryModel(),
+      create: (context) => ApplicationState(),
       child:
         MaterialApp(
           title: 'ZaiChat',
@@ -58,15 +53,19 @@ class Messaging extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-    Center(
-      child: Column(
-        children: <Widget>[
-          Expanded(
-              child: MessageHistory()
-          ),
-          MessageInput()
-        ],
-      ),
+    ChangeNotifierProvider(
+      create: (_) => MessageHistoryModel(),
+      child:
+        Center(
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                    child: MessageHistory()
+                ),
+                MessageInput()
+              ],
+            ),
+          )
     );
 }
 
