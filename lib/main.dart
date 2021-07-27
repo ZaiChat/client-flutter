@@ -142,9 +142,9 @@ class _MessageInputState extends State<MessageInput> {
       author: "Vitaly",
       dateTime: DateTime.now()
     );
-    Provider
-      .of<MessageHistoryModel>(context, listen: false)
-      .addMessage(message);
+    // Provider
+    //   .of<MessageHistoryModel>(context, listen: false)
+    //   .addMessage(message);
     Provider
         .of<ApplicationState>(context, listen: false)
         .postMessage(message.text);
