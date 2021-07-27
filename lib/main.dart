@@ -145,6 +145,9 @@ class _MessageInputState extends State<MessageInput> {
     Provider
       .of<MessageHistoryModel>(context, listen: false)
       .addMessage(message);
+    Provider
+        .of<ApplicationState>(context, listen: false)
+        .postMessage(message.text);
     _controller.text = "";
     _focusNode.requestFocus();
   }
