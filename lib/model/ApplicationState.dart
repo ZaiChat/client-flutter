@@ -8,87 +8,27 @@ class ApplicationState extends ChangeNotifier {
     _init();
   }
 
-  var _loginState = ApplicationLoginState.loggedOut;
-  ApplicationLoginState get loginState => _loginState;
-
   String? _email;
   String? get email => _email;
 
+  String? _displayName;
+  String? get displayName => _displayName;
 
   void _init() async {
     await Firebase.initializeApp();
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {
-        _loginState = ApplicationLoginState.loggedIn;
+        _email = user.email;
+        _displayName = user.displayName;
       } else {
-        _loginState = ApplicationLoginState.loggedOut;
+        _email = null;
+        _displayName = null;
       }
       notifyListeners();
     });
   }
 
-  void startLoginFlow() {
-    _loginState = ApplicationLoginState.emailAddress;
-    notifyListeners();
-  }
-
-  Future<void> verifyEmail(
-      String email,
-      void Function(FirebaseAuthException e) errorCallback,
-  ) async {
-    try {
-      var methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
-      if (methods.contains('password')) {
-        _loginState = ApplicationLoginState.password;
-      } else {
-        _loginState = ApplicationLoginState.register;
-      }
-      _email = email;
-      notifyListeners();
-    } on FirebaseAuthException catch (e) {
-      errorCallback(e);
-    }
-  }
-
-  Future<void> signInWithEmailAndPassword(
-    String email,
-    String password,
-    void Function(FirebaseAuthException e) errorCallback,
-  ) async {
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } on FirebaseAuthException catch (e) {
-      errorCallback(e);
-    }
-  }
-
-  Future<void> registerAccount(
-    String email,
-    String displayName,
-    String password,
-    void Function(FirebaseAuthException e) errorCallback
-  ) async {
-    try {
-      var credential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
-      await credential.user!.updateDisplayName(displayName);
-    } on FirebaseAuthException catch (e) {
-      errorCallback(e);
-    }
-  }
-
   void signOut() {
     FirebaseAuth.instance.signOut();
   }
-}
-
-enum ApplicationLoginState {
-  loggedOut,
-  emailAddress,
-  register,
-  password,
-  loggedIn,
 }

@@ -32,37 +32,46 @@ class ZaiChatHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("ZaiChat"),
-      ),
-      body:
-        Consumer<ApplicationState>(
-          builder: (context, appState, _) {
-            if (appState.loginState == ApplicationLoginState.loggedIn)
-              return Messaging();
-            else
-              return AuthScreen(appState);
-          }
-        )
-    );
+    return Consumer<ApplicationState>(
+        builder: (context, appState, _) =>
+          Scaffold(
+            appBar: AppBar(
+              title: Text("ZaiChat " + (appState.displayName ?? "")),
+              actions: [
+                if (appState.email != null)
+                  IconButton(
+                      onPressed: () {
+                        appState.signOut();
+                      },
+                      icon: Icon(Icons.logout)
+                  )
+              ],
+            ),
+            body: (){
+              if (appState.email != null)
+                return Messaging();
+              else
+                return AuthScreen();
+            }()
+          )
+      );
+    }
   }
-}
 
-class Messaging extends StatelessWidget {
+  class Messaging extends StatelessWidget {
 
-  @override
-  Widget build(BuildContext context) =>
-    ChangeNotifierProvider(
-      create: (_) => MessageHistoryModel(),
-      child:
-        Center(
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                    child: MessageHistory()
-                ),
-                MessageInput()
+    @override
+    Widget build(BuildContext context) =>
+      ChangeNotifierProvider(
+        create: (_) => MessageHistoryModel(),
+        child:
+          Center(
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                      child: MessageHistory()
+                  ),
+                  MessageInput()
               ],
             ),
           )
