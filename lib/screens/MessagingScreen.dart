@@ -41,6 +41,7 @@ class MessageHistory extends StatelessWidget {
       Consumer<MessageHistoryModel>(
           builder: (context, messageHistory, _) =>
               ListView.separated(
+                reverse: true,
                 separatorBuilder: (context, index) {
                   return Divider();
                 },

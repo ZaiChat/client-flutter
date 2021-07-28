@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -18,28 +19,30 @@ class MessageHistoryModel extends ChangeNotifier {
           .limitToLast(100)
           .snapshots()
           .listen((event) {
-            final all = event.docs.map((e) =>
-              Message(
-                uuid: randomUuid(),
-                text: e.get("text") as String,
-                author: e.get("uid") as String,
-                dateTime: DateTime.fromMicrosecondsSinceEpoch(e.get("createdAt") as int)
-              )
-            );
-            event.docChanges.forEach((e) {
-              if (e.type == DocumentChangeType.added) {
-                final m = Message(
+            if (_messages.isEmpty)
+              event.docs.forEach((e) {
+                final m =
+                Message(
                     uuid: randomUuid(),
-                    text: e.doc.get("text") as String,
-                    author: e.doc.get("uid") as String,
-                    dateTime: DateTime.fromMicrosecondsSinceEpoch(e.doc.get("createdAt") as int)
+                    text: e.get("text") as String,
+                    author: e.get("uid") as String,
+                    dateTime: DateTime.fromMicrosecondsSinceEpoch(
+                        e.get("createdAt") as int)
                 );
-                _messages.add(m);
-              }
-            });
-            if (_messages.isEmpty && all.isNotEmpty) {
-              _messages.addAll(all);
-            }
+                _messages.addFirst(m);
+              });
+            else
+              event.docChanges.forEach((e) {
+                if (e.type == DocumentChangeType.added) {
+                  final m = Message(
+                      uuid: randomUuid(),
+                      text: e.doc.get("text") as String,
+                      author: e.doc.get("uid") as String,
+                      dateTime: DateTime.fromMicrosecondsSinceEpoch(e.doc.get("createdAt") as int)
+                  );
+                  _messages.addFirst(m);
+                }
+              });
             notifyListeners();
           });
   }
@@ -52,16 +55,11 @@ class MessageHistoryModel extends ChangeNotifier {
 
   StreamSubscription<dynamic>? _subscription;
 
-  List<Message> _messages = List.empty(growable: true);
+  ListQueue<Message> _messages = ListQueue(100);
 
   int get length => _messages.length;
 
-  Message getByIndex(int index) => _messages[index];
-
-  void addMessage(Message message) {
-    _messages.add(message);
-    notifyListeners();
-  }
+  Message getByIndex(int index) => _messages.elementAt(index);
 }
 
 class Message {
