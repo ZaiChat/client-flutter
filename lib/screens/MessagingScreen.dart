@@ -8,6 +8,10 @@ import '../util.dart';
 
 class MessagingScreen extends StatelessWidget {
 
+  final String myUid;
+
+  MessagingScreen(this.myUid);
+
   @override
   Widget build(BuildContext context) =>
       ChangeNotifierProvider(
@@ -17,7 +21,7 @@ class MessagingScreen extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Expanded(
-                    child: MessageHistory()
+                    child: MessageHistory(myUid)
                 ),
                 MessageInput()
               ],
@@ -27,6 +31,10 @@ class MessagingScreen extends StatelessWidget {
 }
 
 class MessageHistory extends StatelessWidget {
+
+  final String myUid;
+
+  MessageHistory(this.myUid);
 
   @override
   Widget build(BuildContext context) =>
@@ -38,15 +46,40 @@ class MessageHistory extends StatelessWidget {
                 },
                 itemBuilder: (context, index) {
                   final message = messageHistory.getByIndex(index);
-                  return Container(
-                      child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(message.text, key: ValueKey(message.uuid))
-                      )
-                  );
+                  return MessageRow(message, message.author == myUid);
                 },
                 itemCount: messageHistory.length,
               )
+      );
+}
+
+class MessageRow extends StatelessWidget {
+
+  final Message message;
+  final bool selfMessage;
+
+  MessageRow(this.message, this.selfMessage);
+
+  @override
+  Widget build(BuildContext context) =>
+      Row(
+        textDirection: selfMessage ? TextDirection.rtl : TextDirection.ltr,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.black12,
+              shape: BoxShape.circle,
+            ),
+            child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Center(child: Text(message.author.characters.first.toUpperCase()))
+            ),
+          ),
+          Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(message.text)
+          ),
+        ],
       );
 }
 

@@ -48,7 +48,7 @@ class ZaiChatHomePage extends StatelessWidget {
             ),
             body: (){
               if (appState.email != null)
-                return MessagingScreen();
+                return MessagingScreen(appState.uid!);
               else
                 return AuthScreen();
             }()

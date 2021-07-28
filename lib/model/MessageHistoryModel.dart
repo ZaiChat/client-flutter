@@ -22,7 +22,7 @@ class MessageHistoryModel extends ChangeNotifier {
               Message(
                 uuid: randomUuid(),
                 text: e.get("text") as String,
-                author: "default",
+                author: e.get("uid") as String,
                 dateTime: DateTime.fromMicrosecondsSinceEpoch(e.get("createdAt") as int)
               )
             );
@@ -31,7 +31,7 @@ class MessageHistoryModel extends ChangeNotifier {
                 final m = Message(
                     uuid: randomUuid(),
                     text: e.doc.get("text") as String,
-                    author: "default",
+                    author: e.doc.get("uid") as String,
                     dateTime: DateTime.fromMicrosecondsSinceEpoch(e.doc.get("createdAt") as int)
                 );
                 _messages.add(m);
