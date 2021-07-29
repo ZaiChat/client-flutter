@@ -67,6 +67,7 @@ class MessageRow extends StatelessWidget {
         textDirection: selfMessage ? TextDirection.rtl : TextDirection.ltr,
         children: [
           Container(
+            margin: EdgeInsets.symmetric(horizontal: 8),
             decoration: BoxDecoration(
               color: Colors.black12,
               shape: BoxShape.circle,
